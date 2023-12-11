@@ -236,6 +236,8 @@ public:
         .Case("gotol", true)
         .Case("gotox", true)
         .Case("may_goto", true)
+        .Case("gotol_or_nop", true)
+        .Case("nop_or_gotol", true)
         .Case("*", true)
         .Case("exit", true)
         .Case("lock", true)
