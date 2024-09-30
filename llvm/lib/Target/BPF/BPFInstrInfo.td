@@ -676,6 +676,29 @@ let isBranch = 1, isTerminator = 1, hasDelaySlot=0, isBarrier = 1 in {
   def JMPL : BRANCH_LONG<BPF_JA, "gotol", []>;
 }
 
+// Indirect Branches
+let isBranch = 1, isTerminator = 1, isBarrier = 1, isIndirectBranch = 1 in {
+  def BRBR : Instruction {
+  bits<4> BrDst;
+  field bits<64> Inst;
+  field bits<64> SoftFail = 0;
+  let Size = 8;
+
+  let Namespace = "BPF";
+  let DecoderNamespace = "BPF";
+
+  let Inst{63-0} = 0;
+  let Inst{63-56} = 13;
+  let Inst{51-48} = 1;
+  let Inst{55-52} = BrDst;
+
+  dag OutOperandList = (outs);
+  dag InOperandList = (ins GPR:$BrDst);
+  let AsmString = "goto *($BrDst)";
+  let Pattern = [(brind GPR:$BrDst)];
+  }
+}
+
 // Jump and link
 let isCall=1, hasDelaySlot=0, Uses = [R11] in {
   def JAL  : CALL<"call">;
